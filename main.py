@@ -1,7 +1,7 @@
 # coding=utf-8
-import pulsar
-from pulsar.api import arbiter, spawn
-#from pulsar import spawn
+import _pickle as cPickle
+from pulsar.api import arbiter, spawn, get_actor
+from pulsar.apps import Application
 
 
 #
@@ -19,6 +19,18 @@ from pulsar.api import arbiter, spawn
 # ap = spawn(periodic_task=task)
 
 
+def read_file(actor):
+    print("Entering read_file...")
+    with open("websites.txt", "r") as f:
+        # cl = cPickle.load(f)
+        print(f.readline())
+    # return cl
+
+
+class WwwExtraction(Application):
+
+    def build(self):
+        print("Application is built")
 
 
 
@@ -26,6 +38,14 @@ from pulsar.api import arbiter, spawn
 if __name__ == '__main__':
     print("Main")
     a = arbiter()
-    a.is_running()
+    # a.is_running()
     # start arbiter
     a.start()
+    # a.is_running()
+    # actor1 = get_actor()
+    # actor1.start()
+    # a.spawn(actor1, periodic_task=read_file)
+    a.spawn(start=read_file)
+
+    a.aid
+    # a.end()
