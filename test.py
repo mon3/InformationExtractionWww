@@ -46,7 +46,7 @@ def readfile(request, message):
     return file_content
 
 
-class Greeter:
+class Reader:
 
     def __init__(self):
         a = arbiter()
@@ -85,7 +85,7 @@ class Greeter:
     async def _work(self, a=None):
 
         if a is None:
-            # a = await spawn(name='greeter')
+            # a = await spawn(name='Reader')
             a = await spawn(name='reader')
         if NAMES:
             # name = NAMES.pop()
@@ -111,4 +111,4 @@ class Greeter:
 
 
 if __name__ == '__main__':
-    Greeter()
+    Reader()
