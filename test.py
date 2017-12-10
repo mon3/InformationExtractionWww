@@ -1,6 +1,7 @@
 from asyncio import ensure_future
 from pulsar.api import arbiter, command, spawn, send
 import numpy as np
+import itertools
 
 
 def file_len(fname):
@@ -10,39 +11,52 @@ def file_len(fname):
     return i + 1
 
 
-names = ['john', 'luca', 'carl', 'jo', 'alex']
+NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
+# aktorów,
+# czytających
+# plik(można podać dowolne)
 FILE_NAME = "websites.txt"
 
 
+# komenda do testowania komunikacji pomiędzy aktorami
 @command()
 def greetme(request, message):
-    echo = 'Hello {}!'.format(message['name'])
-    request.actor.logger.info(echo)
-    return echo
+    file_content = 'Hello {}!'.format(message['name'])
+    request.actor.logger.info(file_content)
+    return file_content
 
 
 @command()
 def readfile(request, message):
     # print("Entering read_file...")
     # indexes = message['name']
-    print("indexes u aktora: " + str(message))
-    with open(FILE_NAME, "rb") as f:
+    # print("indexes u aktora: " + str(message))
+
+    message_values = list(message.values())
+    request.actor.logger.info("Message data: " + str(message_values))
+    file_content = []
+    with open(FILE_NAME, "r") as f:
+        for line in itertools.islice(f, int(message_values[0][0]),
+                                        int(message_values[0][1])):
+            file_content.append(line.strip())
         # print(f.read())
-        echo = f.readlines()
-    request.actor.logger.info(echo[message])
-    return echo
+        # file_content = f.readlines()
+    request.actor.logger.info("FILE CONTENT: " + str(file_content))
+
+    return file_content
 
 
 class Greeter:
 
     def __init__(self):
         a = arbiter()
-        file_length = file_len(FILE_NAME)
+        file_length = file_len(FILE_NAME) - 1  # czyta ostatnie "/n",
+        # więc musimy długość pliku - 1
         print("File length: " + str(file_length))
-        actors_number = len(names)
+        actors_number = len(NAMES)
         print("Number of arbiters: " + str(actors_number))
-        self.line_dict = dict.fromkeys(names, [None] * 2) # słownik,
-        # przechowujący
+        self.line_dict = dict.fromkeys(NAMES, [None] * 2)  # słownik,
+        # przfile_contentwujący
         # listy
         # wskazujące na pierwszą i ostatnią linię, które aktor musi
         # przeczytać z pliku
@@ -56,7 +70,7 @@ class Greeter:
         print("Indeksy: " + str(indexes))
         counter = 0
         for i in self.line_dict:
-            self.line_dict[i] = [counter, counter+1]
+            self.line_dict[i] = [indexes[counter], indexes[counter+1]-1]
             counter += 1
 
         print(self.line_dict)
@@ -73,22 +87,21 @@ class Greeter:
         if a is None:
             # a = await spawn(name='greeter')
             a = await spawn(name='reader')
-        if names:
-            name = names.pop()
+        if NAMES:
+            # name = NAMES.pop()
             name_indexes = self.line_dict.popitem()
             print("NAME INDEXES: " + str(name_indexes))
 
-            name_index_dict = {name_indexes[0] : name_indexes[1]}
+            name_index_dict = {name_indexes[0]: name_indexes[1]}
             print("NAME INDEXES DICT: " + str(name_indexes))
-
-
 
             # print("Name po kolei: " + name)
             # print(name + " " + str(counter) + str(counter+1))
-            # await send(a, 'greetme', {'name': name}) #uzycie command:
-            # greetme -nazwa komendy, wysyla zlecenie dla aktora a
+            # await send(a, 'greetme', {'name': name}) # użycie command:
+            # greetme -nazwa komendy, wysyła zlecenie dla aktora a
 
-            await send(a, 'readfile', name_index_dict) # uzycie command: greetme
+            await send(a, 'readfile', name_index_dict)  # uzycie command:
+            # greetme
             #  - nazwa
             # komendy, wysyla zlecenie dla aktora a
 
