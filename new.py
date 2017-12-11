@@ -2,7 +2,7 @@ from asyncio import ensure_future
 from pulsar.api import arbiter, command, spawn, send
 import numpy as np
 import itertools
-
+import urllib.request
 
 def file_len(fname):
     with open(fname) as f:
@@ -11,11 +11,12 @@ def file_len(fname):
     return i + 1
 
 
-NAMES = ['download_1', 'download_2', 'download_3', 'download_4', 'download_5']  # nazwy
+NAMES = ['download_1', 'download_2']  # nazwy
 # aktorów,
 # pobierajacyvh strony internetowe
 # można podać dowolne)
-FILE_NAME = "websites.txt"
+#FILE_NAME = "websites.txt"
+FILE_NAME = "homepages.txt"
 
 
 # komenda do testowania komunikacji pomiędzy aktorami
@@ -43,8 +44,10 @@ def readfile(request, message):
         # print(f.read())
         # file_content = f.readlines()
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
-    a = file_content
-    print("a1=", a[0])  # pieczat perwogo sajta iz spiska kazdogo agenta
+    home_page = file_content
+    print("home_page=", home_page[0])  # print linka pierwszej strony z listy kazdego agenta
+    res = urllib.request.urlopen(str(home_page[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
+    print(res)
 
     return file_content
 
