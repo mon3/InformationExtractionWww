@@ -23,5 +23,5 @@ tokfm.pl
 pcworld.pl
 pccentre.pl
 pcformat.pl
-frazpc.pl
+
 

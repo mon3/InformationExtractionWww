@@ -11,12 +11,16 @@ def file_len(fname):
     return i + 1
 
 
-NAMES = ['download_1', 'download_2']  # nazwy
+NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
 # aktorów,
 # pobierajacyvh strony internetowe
 # można podać dowolne)
 #FILE_NAME = "websites.txt"
-FILE_NAME = "homepages.txt"
+
+FILE_NAME = "websites.txt"
+
+NAMES_download = ['download_1', 'download_2']
+FILE_NAME_homepages = "homepages.txt"
 
 
 # komenda do testowania komunikacji pomiędzy aktorami
@@ -44,10 +48,10 @@ def readfile(request, message):
         # print(f.read())
         # file_content = f.readlines()
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
-    url = file_content
-    print("home_page=", url[0])  # print linka pierwszej strony z listy kazdego agenta
-    html = urllib.request.urlopen(str(url[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
-    print(html)
+    #url = file_content
+    #print("home_page=", url[0])  # print linka pierwszej strony z listy kazdego agenta
+    #html = urllib.request.urlopen(str(url[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
+    #print(html)
 
     return file_content
 
@@ -62,13 +66,15 @@ class Reader:
         actors_number = len(NAMES)
         print("Number of arbiters: " + str(actors_number))
         self.line_dict = dict.fromkeys(NAMES, [None] * 2)  # słownik,
-        # przfile_contentwujący
-        # listy
-        # wskazujące na pierwszą i ostatnią linię, które aktor musi
-        # przeczytać z pliku
+                                                            # przechowujący
+                                                            # listy
+                                                            # wskazujące na pierwszą i ostatnią linię, które aktor musi
+                                                            # przeczytać z pliku
 
+        # range(старт, стоп, шаг) - 0 - start, file_length - stop, actors_number - szag --> tworzy liste o zadanym kroku frazpc.pl
         indexes = np.arange(0, file_length if file_length % actors_number == 0
                                 else file_length - actors_number, actors_number)
+        print("indexes = ", indexes)
         indexes = indexes.tolist()
         indexes.append(file_length)
 
@@ -115,6 +121,14 @@ class Reader:
             self._loop.call_later(1, self, a)
         else:
             arbiter().stop()
+
+class Downl:
+    def __init__(self):
+        b = arbiter()
+
+        self._loop = b._loop
+        self._loop.call_later(1, self)
+        b.start()
 
 
 if __name__ == '__main__':
