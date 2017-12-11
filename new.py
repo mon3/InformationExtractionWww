@@ -60,23 +60,22 @@ class Reader:
 
     def __init__(self):
         a = arbiter()
-        file_length = file_len(FILE_NAME) - 1  # czyta ostatnie "/n",
-        # więc musimy długość pliku - 1
+        file_length = file_len(FILE_NAME) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1
+        # print("file_length normal = ", file_len(FILE_NAME)) # file_length normal =  27
         print("File length: " + str(file_length))
-        actors_number = len(NAMES)
+
+        actors_number = len(NAMES) # ilosc aktorow
         print("Number of arbiters: " + str(actors_number))
-        self.line_dict = dict.fromkeys(NAMES, [None] * 2)  # słownik,
-                                                            # przechowujący
-                                                            # listy
-                                                            # wskazujące na pierwszą i ostatnią linię, które aktor musi
+        self.line_dict = dict.fromkeys(NAMES, [None] * 2)  # słownik, przechowujący listy wskazujące na pierwszą i ostatnią linię, które aktor musi
                                                             # przeczytać z pliku
 
-        # range(старт, стоп, шаг) - 0 - start, file_length - stop, actors_number - szag --> tworzy liste o zadanym kroku frazpc.pl
+        # print("line_dict = ", self.line_dict) # line_dict =  {'reader_2': [None, None], 'reader_4': [None, None], 'reader_5': [None, None], 'reader_3': [None, None], 'reader_1': [None, None]}
+        # range(старт, стоп, шаг) - 0 - start, file_length - stop, actors_number - szag --> tworzy liste o zadanym kroku
         indexes = np.arange(0, file_length if file_length % actors_number == 0
-                                else file_length - actors_number, actors_number)
-        print("indexes = ", indexes)
-        indexes = indexes.tolist()
-        indexes.append(file_length)
+                                else file_length - actors_number, actors_number)  # indexes =  [ 0  5 10 15 20]
+        #print("indexes = ", indexes)
+        indexes = indexes.tolist()  # zwraca liste indeksow indexes =  [0, 5, 10, 15, 20]
+        indexes.append(file_length) # dadaje na koniec listy element=dlugosci listy, indexes =  [0, 5, 10, 15, 20, 26]
 
         # TODO: poprawić, żeby ładniej było!
         print("Indeksy: " + str(indexes))
