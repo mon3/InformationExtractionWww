@@ -80,7 +80,7 @@ class Reader:
         # TODO: poprawić, żeby ładniej było!
         print("Indeksy: " + str(indexes))
         counter = 0
-        for i in self.line_dict:
+        for i in self.line_dict: # wpisujemy indeksy do slownika {'reader_2': [0, 4], 'reader_1': [5, 9], 'reader_3': [10, 14], 'reader_5': [15, 19], 'reader_4': [20, 25]}
             self.line_dict[i] = [indexes[counter], indexes[counter+1]-1]
             counter += 1
 
