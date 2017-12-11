@@ -44,10 +44,10 @@ def readfile(request, message):
         # print(f.read())
         # file_content = f.readlines()
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
-    home_page = file_content
-    print("home_page=", home_page[0])  # print linka pierwszej strony z listy kazdego agenta
-    res = urllib.request.urlopen(str(home_page[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
-    print(res)
+    url = file_content
+    print("home_page=", url[0])  # print linka pierwszej strony z listy kazdego agenta
+    html = urllib.request.urlopen(str(url[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
+    print(html)
 
     return file_content
 
