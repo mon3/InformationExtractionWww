@@ -22,7 +22,8 @@ NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
 # aktorów, czytających linki stron domowych z pliku homepages.txt, pobierajacych te strony i wywodzacych ich
 # zawartosc do konsoli
 # plik(można podać dowolne)
-FILE_NAME = "websites.txt"
+#FILE_NAME = "websites.txt"
+FILE_NAME = "homepages.txt"
 
 
 # komenda do testowania komunikacji pomiędzy aktorami
@@ -42,7 +43,7 @@ def readfile(request, message):
     message_values = list(message.values()) # indeksy pol do zczytywania [[0, 4]]
     request.actor.logger.info("Message data: " + str(message_values))
     file_content = []
-    with open(FILE_NAME, "r") as f:
+    with open(FILE_NAME_HOMEPAGES, "r") as f:
         for line in itertools.islice(f, int(message_values[0][0]),
                                         int(message_values[0][1])):
 
@@ -62,7 +63,7 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
 
     def __init__(self):
         a = arbiter()
-        file_length = file_len(FILE_NAME) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1
+        file_length = file_len(FILE_NAME_HOMEPAGES) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1
         # print("file_length normal = ", file_len(FILE_NAME)) # file_length normal =  27
         print("File length: " + str(file_length))
 
