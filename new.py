@@ -12,7 +12,7 @@ def file_len(fname):    # funkcja obliczania dlugosci pliku
 
 
 FILE_NAME_HOMEPAGES_WEB = "homepages_web.txt"
-NAMES_DOWNLOAD = ['download_1', 'download_2'] #nazwy aktorow pobierajacyvh linki stron domowych konferencji z internetu (na poczatek z pliku homepages_web.txt)
+NAMES_DOWNLOAD = ['download_1', 'download_2', 'download_3', 'download_4', 'download_5'] #nazwy aktorow pobierajacyvh linki stron domowych konferencji z internetu (na poczatek z pliku homepages_web.txt)
 # i zapisujacych te linki do pliku homepages.txt
 # !!!!! na konsultacji prowadzacy mowil ze nie obowiazkowo musimy robic w aplikacji pobieranie linkow z internetu,
 # mozemy juz miec plik ten tekstowy z tymi linkami
@@ -23,7 +23,7 @@ NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
 # zawartosc do konsoli
 # plik(można podać dowolne)
 #FILE_NAME = "websites.txt"
-FILE_NAME = "homepages.txt"
+FILE_NAME = "websites.txt"
 
 
 # komenda do testowania komunikacji pomiędzy aktorami
@@ -60,6 +60,28 @@ def readfile(request, message):
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
 
     return file_content
+
+
+@command()
+def readfile0(request, message):
+
+    message_values = list(message.values()) # indeksy pol do zczytywania [[0, 4]]
+    request.actor.logger.info("Message data: " + str(message_values))
+    file_content = []
+    with open(FILE_NAME_HOMEPAGES_WEB, "r") as f:
+        for line in itertools.islice(f, int(message_values[0][0]),
+                                        int(message_values[0][1])): # itertools.islice(iterable[, start], stop[, step]) - итератор, состоящий из среза.
+            file_content.append(line.strip())
+
+        # print(f.read())
+        # file_content = f.readlines()
+    #print(" file_content =", file_content)
+    request.actor.logger.info("FILE CONTENT: " + str(file_content))
+
+    return file_content
+
+
+
 
 
 class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie tych stron i drukowanie ich zawartosci do konsoli
@@ -118,7 +140,7 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
             # await send(a, 'greetme', {'name': name}) # użycie command:
             # greetme -nazwa komendy, wysyła zlecenie dla aktora a
 
-            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego lonkow:
+            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
             # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
             #await send(a, 'readfile', name_index_dict)  # uzycie command:
             result = await send(a, 'readfile', name_index_dict)
@@ -137,15 +159,71 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
             arbiter().stop()
 
 
-
+# -------------------------------------------------------------------------------------------------
 
 class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na poczatek z pliku), zapisywanie tych linkow do pliku homepages.txt
     def __init__(self):
         b = arbiter()
 
+        file_length = file_len(FILE_NAME_HOMEPAGES_WEB) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1    file_length normal =  27
+        print("File HOMEPAGES_WEB length: " + str(file_length))
+
+        actors_number = len(NAMES_DOWNLOAD) # ilosc aktorow
+        print("Number of arbiters b: " + str(actors_number))
+        self.line_dict = dict.fromkeys(NAMES_DOWNLOAD, [None] * 2)  # słownik, przechowujący listy wskazujące na pierwszą i ostatnią linię, które aktor musi
+                                                            # przeczytać z pliku
+
+        # line_dict =  {'reader_2': [None, None], 'reader_4': [None, None], 'reader_5': [None, None], 'reader_3': [None, None], 'reader_1': [None, None]}
+        # range(старт, стоп, шаг) - 0 - start, file_length - stop, actors_number - szag --> tworzy liste o zadanym kroku
+        indexes = np.arange(0, file_length if file_length % actors_number == 0
+                                else file_length - actors_number, actors_number)  # indexes =  [ 0  5 10 15 20]
+        #print("indexes = ", indexes)
+        indexes = indexes.tolist()  # zwraca liste indeksow indexes =  [0, 5, 10, 15, 20]
+        indexes.append(file_length) # dadaje na koniec listy element = dlugosci listy, indexes =  [0, 5, 10, 15, 20, 26]
+
+        # TODO: poprawić, żeby ładniej było!
+        print("Indeksy: " + str(indexes))
+        counter = 0
+        for i in self.line_dict: # wpisujemy indeksy do slownika {'reader_2': [0, 4], 'reader_1': [5, 9], 'reader_3': [10, 14], 'reader_5': [15, 19], 'reader_4': [20, 25]}
+            self.line_dict[i] = [indexes[counter], indexes[counter+1]-1]
+            counter += 1
+
+        print(self.line_dict)
+
         self._loop = b._loop
         self._loop.call_later(1, self)
         b.start()
+
+    def __call__(self, b=None):
+        ensure_future(self._work(b))
+
+    async def _work(self, b=None):
+
+        if b is None:
+            b = await spawn(name='reader')
+        if NAMES_DOWNLOAD:
+            name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
+            print("NAME INDEXES: " + str(name_indexes))
+
+            name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
+            print("NAME INDEXES DICT: " + str(name_indexes))
+
+            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
+            # b - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
+            # uzycie command: greetme - nazwa komendy, wysyla zlecenie dla aktora b
+            result = await send(b, 'readfile0', name_index_dict)
+            leng = len(result)
+            print("len(result): ", leng)
+            for i in result:
+                print("strona domowa: ", i)
+                html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+                print("zawartosc strony domowej: ", html)
+
+
+            self._loop.call_later(1, self, b)
+        else:
+            arbiter().stop()
+
 
 
 if __name__ == '__main__':
