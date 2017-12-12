@@ -66,7 +66,7 @@ def readfile(request, message):
 def readfile0(request, message):
 
     message_values = list(message.values()) # indeksy pol do zczytywania [[0, 4]]
-    request.actor.logger.info("Message data: " + str(message_values))
+    request.actor.logger.info("Message data0: " + str(message_values))
     file_content = []
     with open(FILE_NAME_HOMEPAGES_WEB, "r") as f:
         for line in itertools.islice(f, int(message_values[0][0]),
@@ -76,7 +76,7 @@ def readfile0(request, message):
         # print(f.read())
         # file_content = f.readlines()
     #print(" file_content =", file_content)
-    request.actor.logger.info("FILE CONTENT: " + str(file_content))
+    request.actor.logger.info("FILE HOMEPAGES_WEB CONTENT: " + str(file_content))
 
     return file_content
 
@@ -89,7 +89,7 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
     def __init__(self):
         a = arbiter()
         file_length = file_len(FILE_NAME_HOMEPAGES) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1
-        # print("file_length normal = ", file_len(FILE_NAME)) # file_length normal =  27
+        #print("file_length normal = ", file_len(FILE_NAME_HOMEPAGES)) # file_length normal =  27
         print("File length: " + str(file_length))
 
         actors_number = len(NAMES) # ilosc aktorow
@@ -165,7 +165,8 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
     def __init__(self):
         b = arbiter()
 
-        file_length = file_len(FILE_NAME_HOMEPAGES_WEB) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1    file_length normal =  27
+        file_length = file_len(FILE_NAME_HOMEPAGES_WEB)  # czyta ostatnie "/n", więc musimy długość pliku - 1    file_length normal =  27
+        print("file_length normal = ", file_len(FILE_NAME_HOMEPAGES_WEB))
         print("File HOMEPAGES_WEB length: " + str(file_length))
 
         actors_number = len(NAMES_DOWNLOAD) # ilosc aktorow
@@ -214,10 +215,10 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             result = await send(b, 'readfile0', name_index_dict)
             leng = len(result)
             print("len(result): ", leng)
-            for i in result:
-                print("strona domowa: ", i)
-                html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
-                print("zawartosc strony domowej: ", html)
+           # for i in result:
+            #    print("strona domowa: ", i)
+            #    html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+            #    print("zawartosc strony domowej: ", html)
 
 
             self._loop.call_later(1, self, b)
@@ -227,4 +228,5 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
 
 
 if __name__ == '__main__':
-    Reader()
+    #Reader()
+    Downl()
