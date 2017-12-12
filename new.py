@@ -4,23 +4,25 @@ import numpy as np
 import itertools
 import urllib.request
 
-def file_len(fname):
+def file_len(fname):    # funkcja obliczania dlugosci pliku
     with open(fname) as f:
         for i, l in enumerate(f):
             pass
     return i + 1
 
 
+FILE_NAME_HOMEPAGES_WEB = "homepages_web.txt"
+NAMES_DOWNLOAD = ['download_1', 'download_2'] #nazwy aktorow pobierajacyvh linki stron domowych konferencji z internetu (na poczatek z pliku homepages_web.txt)
+# i zapisujacych te linki do pliku homepages.txt
+# !!!!! na konsultacji prowadzacy mowil ze nie obowiazkowo musimy robic w aplikacji pobieranie linkow z internetu,
+# mozemy juz miec plik ten tekstowy z tymi linkami
+FILE_NAME_HOMEPAGES = "homepages.txt"
+
 NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
-# aktorów,
-# pobierajacyvh strony internetowe
-# można podać dowolne)
-#FILE_NAME = "websites.txt"
-
+# aktorów, czytających linki stron domowych z pliku homepages.txt, pobierajacych te strony i wywodzacych zawartosc ich
+# zawartosc do konsoli
+# plik(można podać dowolne)
 FILE_NAME = "websites.txt"
-
-NAMES_download = ['download_1', 'download_2']
-FILE_NAME_homepages = "homepages.txt"
 
 
 # komenda do testowania komunikacji pomiędzy aktorami
@@ -86,11 +88,11 @@ class Reader:
 
         print(self.line_dict)
 
-        self._loop = a._loop
+        self._loop = a._loop    # kod z przykladu w dokumentacji
         self._loop.call_later(1, self)
         a.start()
 
-    def __call__(self, a=None):
+    def __call__(self, a=None): # kod z przykladu w dokumentacji
         ensure_future(self._work(a))
 
     async def _work(self, a=None):
