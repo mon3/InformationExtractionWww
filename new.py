@@ -164,7 +164,6 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
 class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na poczatek z pliku), zapisywanie tych linkow do pliku homepages.txt
     def __init__(self):
         b = arbiter()
-
         file_length = file_len(FILE_NAME_HOMEPAGES_WEB)  # czyta ostatnie "/n", więc musimy długość pliku - 1    file_length normal =  27
         print("file_length normal = ", file_len(FILE_NAME_HOMEPAGES_WEB))
         print("File HOMEPAGES_WEB length: " + str(file_length))
@@ -209,9 +208,6 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
             print("NAME INDEXES DICT: " + str(name_indexes))
 
-            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
-            # b - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
-            # uzycie command: greetme - nazwa komendy, wysyla zlecenie dla aktora b
             result = await send(b, 'readfile0', name_index_dict)
             leng = len(result)
             print("len(result): ", leng)
@@ -220,6 +216,10 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             #    html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
             #    print("zawartosc strony domowej: ", html)
 
+            f = open('homepages_test.txt', 'a')
+            for index in result:
+                f.write(index + '\n')
+            f.close()
 
             self._loop.call_later(1, self, b)
         else:
