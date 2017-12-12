@@ -45,21 +45,30 @@ def readfile(request, message):
     file_content = []
     with open(FILE_NAME_HOMEPAGES, "r") as f:
         for line in itertools.islice(f, int(message_values[0][0]),
-                                        int(message_values[0][1])):
+                                        int(message_values[0][1])): # itertools.islice(iterable[, start], stop[, step]) - итератор, состоящий из среза.
 
             file_content.append(line.strip())
+
+            url = line.strip()
+            print("home_page=", url)  # print linka strony internetowej z listy kazdego agenta
+            html = urllib.request.urlopen(str(url)).read()  # print zawartosci strony z listy kazdego agenta
+            print("zawartosc home_page=", html)
+
+            #print(" line.strip() =", line.strip())
         # print(f.read())
         # file_content = f.readlines()
+    #print(" file_content =", file_content)
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
+
     #url = file_content
     #print("home_page=", url[0])  # print linka pierwszej strony z listy kazdego agenta
     #html = urllib.request.urlopen(str(url[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
-    #print(html)
+    #print("zawartosc home_page=", html)
 
     return file_content
 
 
-class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie tych stron i wywod ich zawartosci do konsoli
+class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie tych stron i drukowanie ich zawartosci do konsoli
 
     def __init__(self):
         a = arbiter()
