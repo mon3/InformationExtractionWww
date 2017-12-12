@@ -211,10 +211,6 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             result = await send(b, 'readfile0', name_index_dict)
             leng = len(result)
             print("len(result): ", leng)
-           # for i in result:
-            #    print("strona domowa: ", i)
-            #    html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
-            #    print("zawartosc strony domowej: ", html)
 
             f = open('homepages_test.txt', 'a')
             for index in result:
