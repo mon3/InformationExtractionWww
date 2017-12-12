@@ -19,7 +19,7 @@ NAMES_DOWNLOAD = ['download_1', 'download_2'] #nazwy aktorow pobierajacyvh linki
 FILE_NAME_HOMEPAGES = "homepages.txt"
 
 NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']  # nazwy
-# aktorów, czytających linki stron domowych z pliku homepages.txt, pobierajacych te strony i wywodzacych zawartosc ich
+# aktorów, czytających linki stron domowych z pliku homepages.txt, pobierajacych te strony i wywodzacych ich
 # zawartosc do konsoli
 # plik(można podać dowolne)
 FILE_NAME = "websites.txt"
@@ -58,7 +58,7 @@ def readfile(request, message):
     return file_content
 
 
-class Reader:
+class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie tych stron i wywod ich zawartosci do konsoli
 
     def __init__(self):
         a = arbiter()
