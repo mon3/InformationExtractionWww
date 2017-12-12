@@ -39,7 +39,7 @@ def readfile(request, message):
     # indexes = message['name']
     # print("indexes u aktora: " + str(message))
 
-    message_values = list(message.values())
+    message_values = list(message.values()) # indeksy pol do zczytywania [[0, 4]]
     request.actor.logger.info("Message data: " + str(message_values))
     file_content = []
     with open(FILE_NAME, "r") as f:
@@ -102,10 +102,10 @@ class Reader:
             a = await spawn(name='reader')
         if NAMES:
             # name = NAMES.pop()
-            name_indexes = self.line_dict.popitem()
+            name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
             print("NAME INDEXES: " + str(name_indexes))
 
-            name_index_dict = {name_indexes[0]: name_indexes[1]}
+            name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
             print("NAME INDEXES DICT: " + str(name_indexes))
 
 
@@ -114,6 +114,8 @@ class Reader:
             # await send(a, 'greetme', {'name': name}) # użycie command:
             # greetme -nazwa komendy, wysyła zlecenie dla aktora a
 
+            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego lonkow:
+            # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
             await send(a, 'readfile', name_index_dict)  # uzycie command:
             # greetme
             #  - nazwa
@@ -123,7 +125,10 @@ class Reader:
         else:
             arbiter().stop()
 
-class Downl:
+
+
+
+class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na poczatek z pliku), zapisywanie tych linkow do pliku homepages.txt
     def __init__(self):
         b = arbiter()
 
