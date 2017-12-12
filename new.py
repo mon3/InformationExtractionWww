@@ -49,21 +49,15 @@ def readfile(request, message):
 
             file_content.append(line.strip())
 
-            url = line.strip()
-            print("home_page=", url)  # print linka strony internetowej z listy kazdego agenta
-            html = urllib.request.urlopen(str(url)).read()  # print zawartosci strony z listy kazdego agenta
-            print("zawartosc home_page=", html)
+            #url = line.strip()
+            #print("home_page=", url)  # print linka strony internetowej z listy kazdego agenta
+            #html = urllib.request.urlopen(str(url)).read()  # print zawartosci strony z listy kazdego agenta
+            #print("zawartosc home_page=", html)
 
-            #print(" line.strip() =", line.strip())
         # print(f.read())
         # file_content = f.readlines()
     #print(" file_content =", file_content)
     request.actor.logger.info("FILE CONTENT: " + str(file_content))
-
-    #url = file_content
-    #print("home_page=", url[0])  # print linka pierwszej strony z listy kazdego agenta
-    #html = urllib.request.urlopen(str(url[0])).read() # print zawartosci pierwszej strony z listy kazdego agenta
-    #print("zawartosc home_page=", html)
 
     return file_content
 
@@ -126,7 +120,14 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
 
             # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego lonkow:
             # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
-            await send(a, 'readfile', name_index_dict)  # uzycie command:
+            #await send(a, 'readfile', name_index_dict)  # uzycie command:
+            result = await send(a, 'readfile', name_index_dict)
+            leng = len(result)
+            print("len(result): ", leng)
+            for i in result:
+                print("strona domowa: ", i)
+                html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+                print("zawartosc strony domowej: ", html)
             # greetme
             #  - nazwa
             # komendy, wysyla zlecenie dla aktora a
