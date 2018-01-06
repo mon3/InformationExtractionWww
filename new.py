@@ -128,33 +128,35 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
             a = await spawn(name='reader')
         if NAMES:
             # name = NAMES.pop()
-            name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
-            print("NAME INDEXES: " + str(name_indexes))
+            # słownik nie może być pusty - inaczej rzuca błędem
+            if (len(self.line_dict)!=0):
+                name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
+                print("NAME INDEXES: " + str(name_indexes))
 
-            name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
-            print("NAME INDEXES DICT: " + str(name_indexes))
+                name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
+                print("NAME INDEXES DICT: " + str(name_indexes))
 
 
-            # print("Name po kolei: " + name)
-            # print(name + " " + str(counter) + str(counter+1))
-            # await send(a, 'greetme', {'name': name}) # użycie command:
-            # greetme -nazwa komendy, wysyła zlecenie dla aktora a
+                # print("Name po kolei: " + name)
+                # print(name + " " + str(counter) + str(counter+1))
+                # await send(a, 'greetme', {'name': name}) # użycie command:
+                # greetme -nazwa komendy, wysyła zlecenie dla aktora a
 
-            # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
-            # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
-            #await send(a, 'readfile', name_index_dict)  # uzycie command:
-            result = await send(a, 'readfile', name_index_dict)
-            leng = len(result)
-            print("len(result): ", leng)
-            for i in result:
-                print("strona domowa: ", i)
-                html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
-                print("zawartosc strony domowej: ", html)
-            # greetme
-            #  - nazwa
-            # komendy, wysyla zlecenie dla aktora a
+                # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
+                # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
+                #await send(a, 'readfile', name_index_dict)  # uzycie command:
+                result = await send(a, 'readfile', name_index_dict)
+                leng = len(result)
+                print("len(result): ", leng)
+                for i in result:
+                    print("strona domowa: ", i)
+                    html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+                    print("zawartosc strony domowej: ", html)
+                # greetme
+                #  - nazwa
+                # komendy, wysyla zlecenie dla aktora a
 
-            self._loop.call_later(1, self, a)
+                self._loop.call_later(1, self, a)
         else:
             arbiter().stop()
 
@@ -183,10 +185,10 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
 
         # TODO: poprawić, żeby ładniej było!
         print("Indeksy: " + str(indexes))
-        counter = 0
-        for i in self.line_dict: # wpisujemy indeksy do slownika {'reader_2': [0, 4], 'reader_1': [5, 9], 'reader_3': [10, 14], 'reader_5': [15, 19], 'reader_4': [20, 25]}
-            self.line_dict[i] = [indexes[counter], indexes[counter+1]-1]
-            counter += 1
+        # counter = 0
+        # for i in self.line_dict: # wpisujemy indeksy do slownika {'reader_2': [0, 4], 'reader_1': [5, 9], 'reader_3': [10, 14], 'reader_5': [15, 19], 'reader_4': [20, 25]}
+        #     self.line_dict[i] = [indexes[counter], indexes[counter+1]-1]
+        #     counter += 1
 
         print(self.line_dict)
 
@@ -211,12 +213,12 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             result = await send(b, 'readfile0', name_index_dict)
             leng = len(result)
             print("len(result): ", leng)
-           # for i in result:
-            #    print("strona domowa: ", i)
-            #    html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
-            #    print("zawartosc strony domowej: ", html)
+            for i in result:
+               print("strona domowa: ", i)
+               html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+               print("zawartosc strony domowej: ", html)
 
-            f = open('homepages_test.txt', 'a')
+            f = open('homepages_test.txt', 'w')
             for index in result:
                 f.write(index + '\n')
             f.close()
@@ -228,5 +230,5 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
 
 
 if __name__ == '__main__':
-    #Reader()
+    Reader()
     Downl()
