@@ -225,4 +225,4 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
 
 if __name__ == '__main__':
     #Reader()
-    Downl()
+    №Downl()
