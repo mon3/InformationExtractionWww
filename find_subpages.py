@@ -1,5 +1,6 @@
 import urllib.request
-from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup, SoupStrainer
 
 
 def wikicfp_link(number):
@@ -28,4 +29,33 @@ def wikicfp_link(number):
     #print(link_home0)
 
 
-wikicfp_link(2)
+
+
+
+#wikicfp_link(1)
+
+
+
+def conf_link():
+    myfile = open("wikicfp_conf.txt", "r")  # чтение из файла
+    for line in myfile.readlines():  # построчно читаем файл и выводим на экран
+        # print (line)
+        url = line.strip()
+        #url='http://www.wikicfp.com/cfp/servlet/event.showcfp?eventid=71733&copyownerid=13881'
+        r = requests.get(url)
+        soup = BeautifulSoup(r.content, 'html.parser', parse_only=SoupStrainer('a'))
+        #print([link['href'] for link in soup if link.has_attr('href')])
+        print("linkow na stronie jest:", len(soup.find_all('a', href=True)))
+        ii=0
+        link_home=0
+        for link in soup:
+            ii = ii + 1
+            if ii==25 :
+                print("link strony konferencji: ", link['href'])
+                link_home=link_home+1
+
+        #print(ii)
+        print("link_home = ", link_home)
+
+
+conf_link()
