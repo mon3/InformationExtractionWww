@@ -17,7 +17,8 @@ def get_text_and_tags_recursive(text, textTags, currentSoup, currentTags):
 
 def get_classificated_text(html):
 
-    soup = BeautifulSoup(html, 'html').find('html')
+    # soup = BeautifulSoup(html, 'html').find('html')
+    soup = BeautifulSoup(html, 'html.parser').find('html')
     text = []
     text_tags = []
     get_text_and_tags_recursive(text, text_tags, soup, [])
@@ -48,7 +49,7 @@ def get_classificated_text(html):
 
 
 
-html = open('../conferences-data/pagestorage-annotated/0/1.html', 'r').read()
+html = open('conferences-data/pagestorage-annotated/0/1.html', 'r').read()
 words, classes = get_classificated_text(html)
 
 for word, word_class in zip(words, classes):
