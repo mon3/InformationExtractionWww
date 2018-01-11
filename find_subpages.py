@@ -24,6 +24,15 @@ def wikicfp_link(number, n2):
         number=number-1
     f.close()
 
+    #myfile = open("wikicfp_conf.txt", "r")
+    #lines = myfile.readlines()
+    #print("wikicfp_conf lista z pliku", myfile)
+    #myfile.close()
+
+#wikicfp_link(3, 3)
+
+
+
 # wyszukiwanie na podstronach wikicfp linkow na strony konferencji typu http://www.icisce.org
 # i zapisywanie ich do pliku conf.txt
 def conf_link2():
@@ -50,7 +59,7 @@ def conf_link2():
     f.close()
     myfile.close()
 
-#wikicfp_link(5, 5)
+#wikicfp_link(2, 2)
 #conf_link2()
 
 
@@ -70,7 +79,7 @@ def line():
     pocz=5
     konec=8
     ra=konec-pocz
-    lines = file.readlines()[5:8]
+    lines = file.readlines()
     print(lines)
     iter=0
     #print(lines[iter])
@@ -80,8 +89,29 @@ def line():
     file.close()
 
 
+#line()
 
+def original_links():
+    file = open('conf.txt', 'r')
+    lines = file.readlines()
+    file.close()
+    file = open('conf.txt', 'w')
+    #print("dlina spiska:", len(lines))
+    List = list(set(lines))
+    #print("lines", lines)
+    #print("List", List)
+    #print(List[0])
+    #print("dlina spiska bez powtorow:", len(List))
+    iter=0
+    while iter<len(List):
+        #print(lines[iter])
+        file.write(List[iter])
+        iter = iter + 1
+    file.close()
 
+#wikicfp_link(2, 2)
+#conf_link2()
+original_links()
 
 # czyta jeden przekazany link do konferencji na wikicfp i szuka tam linku do tej konferencji, zwraca ten link
 def find_conf_link_one(url):

@@ -101,6 +101,19 @@ def write_conf_link(request, message):
     f.close()
     myfile.close()
 
+def original_links():
+    file = open('conf.txt', 'r')
+    lines = file.readlines()
+    file.close()
+    file = open('conf.txt', 'w')
+    List = list(set(lines))
+    iter=0
+    while iter<len(List):
+        file.write(List[iter])
+        iter = iter + 1
+    file.close()
+
+
 
 class Reader: # czytanie linkow stron konferencji na wikicfp z pliku wikicfp_conf.txt, na tych stronach wyszukiwanie
 # linkow do stron konferencji i wrzucanie do pliku conf.txt
@@ -170,7 +183,7 @@ class Reader: # czytanie linkow stron konferencji na wikicfp z pliku wikicfp_con
 
 if __name__ == '__main__':
     Reader()
-
+    original_links()
 
 
 
