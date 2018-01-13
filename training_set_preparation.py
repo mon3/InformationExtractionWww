@@ -229,13 +229,13 @@ def test():
 
     # print(X, y)
     X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2)
-    # print(X_train, X_test)
-    # prepare_crf_trainer(X_train, Y_train)
+    print(X_train, X_test)
+    prepare_crf_trainer(X_train, Y_train)
     #
-    # tagger = pycrfsuite.Tagger()
-    # tagger.open('crf.model')
-    # y_pred = [tagger.tag(xseq) for xseq in X_test]
-  # print(y_pred[-1], X_test[-1])
+    tagger = pycrfsuite.Tagger()
+    tagger.open('crf.model')
+    y_pred = [tagger.tag(xseq) for xseq in X_test]
+    print(y_pred[-1], X_test[-1])
 
   # Let's take a look at a random sample in the testing set
   # i = 100
