@@ -64,9 +64,9 @@ def get_classificated_text(html):
         for word in tag_text.split():
             # print("WORD in TAG_TEXT = ", word)
             single_words.append(word)
-            classes.append(this_class) # przypisujemy klasy do słów
-        classified_words.append([tag_text, this_class])
-        docs.append(classified_words) # słowa z klasami
+            classes.append(this_class)  # przypisujemy klasy do słów
+            classified_words.append((word, this_class))
+        docs.extend(classified_words)  # słowa z klasami
     # print("DOCS = ", docs[0])
     # return single_words, classes
     return docs
@@ -207,29 +207,25 @@ def test():
     data = []
 
     for j in docs:
-        for i, doc in enumerate(j):
+        tokens = [t for t, label in doc]
 
-            # Obtain the list of tokens in the document
-            tokens = [t for t, label in doc]
+        # Perform POS tagging
+        tagged = pos_tag(tokens)
 
-            # Perform POS tagging
-            tagged = pos_tag(tokens)
-
-            # Take the word, POS tag, and its label
-            data.append(
-                   [(w, pos, label) for (w, label), (word, pos) in
-                     zip(doc, tagged)])
+        # Take the word, POS tag, and its label
+        data.append(
+            [(w, pos, label) for (w, label), (word, pos) in
+             zip(doc, tagged)])
 
     print(data)
 
     X = [extract_features(doc) for doc in data]
     y = [get_labels(doc) for doc in data]
-    # X = [y for x in extract_features(doc) for y in x]  # flatten features list
-    # y = [y for x in get_labels(doc) for y in x]  # flatter labels list
 
 
-    # print(X, y)
     X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2)
+    print(len(X_train), len(X_test), len(Y_train), len(Y_test))
+
     print(X_train, X_test)
     prepare_crf_trainer(X_train, Y_train)
     #
