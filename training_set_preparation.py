@@ -68,8 +68,8 @@ def get_classificated_text(html):
             classified_words.append((word, this_class))
         docs.append(classified_words) # słowa z klasami
     # print("DOCS = ", docs[0])
-    return single_words, classes
-    # return docs
+    # return single_words, classes
+    return docs
 
 def word2features(doc, i):
     word = doc[i][0]
@@ -160,19 +160,20 @@ def prepare_crf_trainer(X_train, Y_train):
 def get_files(directory):
     import os
 
-    f = open("html_out.txt", 'a')
-
+    # f = open("html_out.txt", 'a')
+    #
     html_files = []
-    for dir in os.listdir(directory):
-        if (dir.endswith(".txt")==0):
-            for file in os.listdir(os.path.join(directory, dir)):
-                if file.endswith(".html"):
-                    html = open(os.path.join(os.path.join(directory, dir), file),'r').read()
-                    html = get_filtered_text_from_ds(html)
-                    f.write(html)
-                    html_files.append(html)
+    for file in os.listdir(directory):
+        # if (dir.endswith(".txt")==0):
+        #     for file in os.listdir(os.path.join(directory, dir)):
+            if file.endswith(".html"):
+                html = open(os.path.join(directory, file),'r').read()
+                # html = get_filtered_text_from_ds(html)
+                # print(html)
+                # f.write(html)
+                html_files.append(html)
             # print(html_files[1])
-    f.close()
+    # f.close()
 
     return html_files
 
@@ -190,11 +191,63 @@ def split_text_to_entities(directory, file_nr):
     # html = get_filtered_text_from_ds(html)
     # print(html)
 
+def test():
+    html_files = get_files("conferences-data/pagestorage-annotated/0/")
+
+
+    docs = []
+
+    for i in range(len(html_files)):
+        doc = get_classificated_text(html_files[i])
+        # print(doc)
+        docs.append(doc)
+
+
+
+    data = []
+
+    for j in docs:
+
+        for i, doc in enumerate(j):
+            # Obtain the list of tokens in the document
+            tokens = [t for t, label in doc]
+
+            # Perform POS tagging
+            tagged = pos_tag(tokens)
+
+            # Take the word, POS tag, and its label
+            data.append(
+                   [(w, pos, label) for (w, label), (word, pos) in
+                     zip(doc, tagged)])
+
+            print(data)
+
+    X = [extract_features(doc) for doc in data]
+    y = [get_labels(doc) for doc in data]
+
+
+
+    # print(X, y)
+    X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2)
+    # print(X_train, X_test)
+    # prepare_crf_trainer(X_train, Y_train)
+    #
+    # tagger = pycrfsuite.Tagger()
+    # tagger.open('crf.model')
+    # y_pred = [tagger.tag(xseq) for xseq in X_test]
+  # print(y_pred[-1], X_test[-1])
+
+  # Let's take a look at a random sample in the testing set
+  # i = 100
+
+    # for x, y in zip(y_pred[i], [x[1].split("=")[1] for x in X_test[i]]):
+    #        print("%s (%s)" % (y, x))
 
 
 if __name__== "__main__":
 
-    split_text_to_entities("conferences-data/pagestorage-annotated/", "0.html")
+    test()
+    # split_text_to_entities("conferences-data/pagestorage-annotated/", "0.html")
 
 
     # tag_annotated("conferences-data/pagestorage-annotated/")
@@ -203,24 +256,24 @@ if __name__== "__main__":
     #     "conferences-data/pagestorage-annotated/")
     # # print(html_files_content_whole)
 
-    # print(os.listdir("conferences-data/pagestorage-annotated/0/"))
+
     # html = open('conferences-data/pagestorage-annotated/0/1.html', 'r').read()
     # print(html)
-    # f = open('all_html', 'w')
-    # f.write([str(i)for i in html_files_content_whole])
-    # f.close()
-    # words, classes = get_classificated_text(html_files_content_whole)
-    #
-    #
+    # # f = open('all_html', 'w')
+    # # f.write([str(i)for i in html_files_content_whole])
+    # # f.close()
+    # words, classes = get_classificated_text(html)
+    # #
+    # #
     # for word, word_class in zip(words, classes):
     #     if word_class != 'DIFF':
     #         print (word, word_class)
-
-
     #
-    # docs = []
-    # f = open("html_out.txt", 'a')
     #
+    # #
+    # # docs = []
+    # # f = open("html_out.txt", 'a')
+    # #
     # for i in range(len(html_files_content_whole)):
     #     doc = get_classificated_text(html_files_content_whole[i])
     #     docs.append(doc)
