@@ -65,7 +65,7 @@ def get_classificated_text(html):
             # print("WORD in TAG_TEXT = ", word)
             single_words.append(word)
             classes.append(this_class) # przypisujemy klasy do słów
-            classified_words.append((word, this_class))
+        classified_words.append([tag_text, this_class])
         docs.append(classified_words) # słowa z klasami
     # print("DOCS = ", docs[0])
     # return single_words, classes
@@ -202,13 +202,13 @@ def test():
         # print(doc)
         docs.append(doc)
 
-
+    # print(docs)
 
     data = []
 
     for j in docs:
-
         for i, doc in enumerate(j):
+
             # Obtain the list of tokens in the document
             tokens = [t for t, label in doc]
 
@@ -224,7 +224,8 @@ def test():
 
     X = [extract_features(doc) for doc in data]
     y = [get_labels(doc) for doc in data]
-
+    # X = [y for x in extract_features(doc) for y in x]  # flatten features list
+    # y = [y for x in get_labels(doc) for y in x]  # flatter labels list
 
 
     # print(X, y)
