@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.stem.snowball import SnowballStemmer
 from nltk import pos_tag, ne_chunk
+from urllib.request import urlopen
 
 
 def get_nonfiltered_text(url):
@@ -27,9 +28,20 @@ def get_filtered_text(url, stemming=True):
     :returns: tekst strony po filtracji
     """
     text = get_nonfiltered_text(url)
+    print("TEXT = ", text)
     filtered = filter_text(text, stemming)
     return " ".join(filtered)
 
+def get_filtered_text_from_ds(text, stemming=True):
+    """
+    Zwraca tekst strony po sanityzacji i filtracji.
+
+    :param url: adres strony
+    :returns: tekst strony po filtracji
+    """
+    # text = get_nonfiltered_text(url)
+    filtered = filter_text(text, stemming)
+    return " ".join(filtered)
 
 def get_link_text_length(html):
     """
@@ -186,7 +198,7 @@ def get_link_text_length(html):
     :param html: kod html strony
     :returns: długość tekstu w linkach, długość całego tekstu
     """
-    bs = BeautifulSoup(html, 'html.parser')
+    bs = BeautifulSoup(html, 'html.parser').find('html')
     # print(bs.prettify())
 
     links = bs.find_all('a')
@@ -261,4 +273,16 @@ if __name__ == '__main__':
 
     # text = get_link_text_length(html_doc)
     # zwraca ze stemmingiem dla arg2 = True
-    print(get_filtered_text('http://www.icitm.org/', False))
+    html = 'http://www.icitm.org/'
+    # html = 'conferences-data/pagestorage-annotated/0/1.html'
+
+
+
+    # html = open('conferences-data/pagestorage-annotated/0/1.html', 'r').read()
+    # request = urllib.request(html)
+    # request.add_header('Accept-Encoding', 'utf-8')
+    # response = urlopen(request)
+    #
+    # soup = BeautifulSoup(response)
+    text = get_filtered_text(html, False)
+    print(text)

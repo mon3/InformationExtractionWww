@@ -2,8 +2,13 @@ from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 from bs4.element import Tag
 from nltk import pos_tag
+from nltk.corpus import stopwords
 from sklearn.model_selection import train_test_split
 import pycrfsuite
+import os
+from htmlparser import get_filtered_text_from_ds, get_filtered_text, \
+    filter_nonalnum, tokenize, filter_short
+
 
 def get_text_and_tags_recursive(text, textTags, currentSoup, currentTags):
     if type(currentSoup) == NavigableString:
@@ -23,15 +28,24 @@ def get_classificated_text(html):
 
     # soup = BeautifulSoup(html, 'html').find('html')
     soup = BeautifulSoup(html, 'html.parser').find('html')
+
     text = []
     text_tags = []
     get_text_and_tags_recursive(text, text_tags, soup, [])
+    # print("TAGS = ", text_tags)
+    # print("TEXT = ", text)
+
+    # text_tokens = get_filtered_text_from_ds(text, True)
+    # print(text_tokens)
 
     single_words = []
     classes = []
 
     for a in text_tags:
+        # print("a = ", a) # list
         a = [x.lower() for x in a]
+
+    # print("TAGS2 = ", text_tags)
 
     docs = []
     for tag_text, tags in zip(text, text_tags):
@@ -48,13 +62,14 @@ def get_classificated_text(html):
 
         classified_words = []
         for word in tag_text.split():
+            # print("WORD in TAG_TEXT = ", word)
             single_words.append(word)
-            classes.append(this_class)
+            classes.append(this_class) # przypisujemy klasy do słów
             classified_words.append((word, this_class))
-        docs.append(classified_words)
+        docs.append(classified_words) # słowa z klasami
     # print("DOCS = ", docs[0])
-    # return single_words, classes
-    return docs
+    return single_words, classes
+    # return docs
 
 def word2features(doc, i):
     word = doc[i][0]
@@ -145,67 +160,111 @@ def prepare_crf_trainer(X_train, Y_train):
 def get_files(directory):
     import os
 
+    f = open("html_out.txt", 'a')
+
     html_files = []
     for dir in os.listdir(directory):
         if (dir.endswith(".txt")==0):
             for file in os.listdir(os.path.join(directory, dir)):
                 if file.endswith(".html"):
                     html = open(os.path.join(os.path.join(directory, dir), file),'r').read()
+                    html = get_filtered_text_from_ds(html)
+                    f.write(html)
                     html_files.append(html)
             # print(html_files[1])
+    f.close()
+
     return html_files
+
+
+def tag_annotated(parent_folder):
+    parent = parent_folder
+    os.chdir(parent_folder)
+    print(os.getcwd())
+
+
+def split_text_to_entities(directory, file_nr):
+    html = open(os.path.join(os.path.join(directory, "0"), file_nr), 'r').read()
+    print(html)
+    get_filtered_text(html, False)
+    # html = get_filtered_text_from_ds(html)
+    # print(html)
+
+
 
 if __name__== "__main__":
 
-    html_files = get_files("conferences-data/pagestorage-annotated/")
-    # import os
+    split_text_to_entities("conferences-data/pagestorage-annotated/", "0.html")
+
+
+    # tag_annotated("conferences-data/pagestorage-annotated/")
+
+    # html_files_content_whole = get_files(
+    #     "conferences-data/pagestorage-annotated/")
+    # # print(html_files_content_whole)
+
     # print(os.listdir("conferences-data/pagestorage-annotated/0/"))
     # html = open('conferences-data/pagestorage-annotated/0/1.html', 'r').read()
     # print(html)
-    # words, classes = get_classificated_text(html)
-
-
+    # f = open('all_html', 'w')
+    # f.write([str(i)for i in html_files_content_whole])
+    # f.close()
+    # words, classes = get_classificated_text(html_files_content_whole)
+    #
+    #
     # for word, word_class in zip(words, classes):
     #     if word_class != 'DIFF':
     #         print (word, word_class)
-    docs = []
-    for i in range(len(html_files)):
-        doc = get_classificated_text(html_files[i])
-        docs.append(doc)
-    # for class_word in docs:
+
+
+    #
+    # docs = []
+    # f = open("html_out.txt", 'a')
+    #
+    # for i in range(len(html_files_content_whole)):
+    #     doc = get_classificated_text(html_files_content_whole[i])
+    #     docs.append(doc)
+    #     f.write(str(doc))
+    # f.close()
+
+
+
+
+
+        # for class_word in docs:
     #     for i in class_word:
     #         print(i)
+    #
+    # data = []
+    # for j in docs:
+    #     for i, doc in enumerate(j):
+    #         # Obtain the list of tokens in the document
+    #         tokens = [t for t, label in doc]
+    #
+    #         # Perform POS tagging
+    #         tagged = pos_tag(tokens)
+    #
+    #         # Take the word, POS tag, and its label
+    #         data.append(
+    #             [(w, pos, label) for (w, label), (word, pos) in zip(doc, tagged)])
+    #
+    # # print(data)
+    #
+    # X = [extract_features(doc) for doc in data]
+    # y = [get_labels(doc) for doc in data]
 
-    data = []
-    for j in docs:
-        for i, doc in enumerate(j):
-            # Obtain the list of tokens in the document
-            tokens = [t for t, label in doc]
-
-            # Perform POS tagging
-            tagged = pos_tag(tokens)
-
-            # Take the word, POS tag, and its label
-            data.append(
-                [(w, pos, label) for (w, label), (word, pos) in zip(doc, tagged)])
-
-    # print(data)
-
-    X = [extract_features(doc) for doc in data]
-    y = [get_labels(doc) for doc in data]
 
 
-
-    # # print(X, y)
-    X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2)
-    prepare_crf_trainer(X_train, Y_train)
-
-    tagger = pycrfsuite.Tagger()
-    tagger.open('crf.model')
-    y_pred = [tagger.tag(xseq) for xseq in X_test]
-    # print(y_pred[-1], X_test[-1])
-
-    # Let's take a look at a random sample in the testing set
-    # i = 100
-    for x, y in zip(y_pred[i], [x[1].split("=")[1] for x in X_test[i]]):
-        print("%s (%s)" % (y, x))
+    # print(X, y)
+    # X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=0.2)
+    # prepare_crf_trainer(X_train, Y_train)
+    #
+    # tagger = pycrfsuite.Tagger()
+    # tagger.open('crf.model')
+    # y_pred = [tagger.tag(xseq) for xseq in X_test]
+    # # print(y_pred[-1], X_test[-1])
+    #
+    # # Let's take a look at a random sample in the testing set
+    # # i = 100
+    # for x, y in zip(y_pred[i], [x[1].split("=")[1] for x in X_test[i]]):
+    #     print("%s (%s)" % (y, x))
