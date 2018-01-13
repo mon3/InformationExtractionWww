@@ -220,7 +220,7 @@ def test():
                    [(w, pos, label) for (w, label), (word, pos) in
                      zip(doc, tagged)])
 
-            print(data)
+    print(data)
 
     X = [extract_features(doc) for doc in data]
     y = [get_labels(doc) for doc in data]
