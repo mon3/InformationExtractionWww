@@ -111,7 +111,7 @@ def original_links():
 
 #wikicfp_link(2, 2)
 #conf_link2()
-original_links()
+#original_links()
 
 # czyta jeden przekazany link do konferencji na wikicfp i szuka tam linku do tej konferencji, zwraca ten link
 def find_conf_link_one(url):

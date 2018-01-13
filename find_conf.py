@@ -87,16 +87,16 @@ def write_conf_link(request, message):
     iter=0
     f = open('conf.txt', 'a')
     while pocz < koniec:
-        print("link z wikicfp: ",lines[iter])
+        #print("link z wikicfp: ",lines[iter])
         lk = lines[iter].strip()
         #print ("lk=", lk)
         link_conf = find_conf_link_one(lk)
         pocz=pocz+1
         iter = iter + 1
         if link_conf==None:
-            print("link strony konferencji: nie ma linka na konferencje")
+            #print("link strony konferencji: nie ma linka na konferencje")
             continue
-        print("link strony konferencji: ", link_conf)
+        #print("link strony konferencji: ", link_conf)
         f.write(link_conf + '\n')
     f.close()
     myfile.close()
@@ -161,7 +161,7 @@ class Reader: # czytanie linkow stron konferencji na wikicfp z pliku wikicfp_con
             # a = await spawn(name='Reader')
             a = await spawn(name='reader')
         if NAMES:
-            # name = NAMES.pop()
+            name = NAMES.pop()
             # słownik nie może być pusty - inaczej rzuca błędem
             if (len(self.line_dict)!=0):
                 name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
