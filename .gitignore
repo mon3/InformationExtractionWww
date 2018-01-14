@@ -2,3 +2,4 @@ venv
 *.pyc
 *.xml
 conferences-data
+*.owl
