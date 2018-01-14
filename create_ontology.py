@@ -6,7 +6,8 @@ def run_onto(path):
     # ontologię
 
     onto = Ontology("http://conferences_wedt.org/onto.owl")
-    onto_path.append("/home/monikas/Desktop/studia/WEDT/project/conf_ontology/")
+    onto_path.append(os.path.join(os.getcwd(), 'conf_ontology/'))
+    # onto_path.append("/home/monikas/Desktop/studia/WEDT/project/conf_ontology/")
     # onto = get_ontology("file:/home/monikas/Desktop/studia/WEDT/project" \
     #                         "/conf_ontology/onto.owl")
     onto.load()
@@ -115,6 +116,6 @@ def run_onto(path):
 
 
 if __name__ == "__main__":
-    xml_path = '/home/monikas/Desktop/studia/WEDT/project/conferences-data' \
-            '/pagestorage-annotated/0/conferenceData.xml'
+    xml_path = os.path.join(os.getcwd(), 'conferences-data' \
+            '/pagestorage-annotated/0/conferenceData.xml')
     run_onto(xml_path)
