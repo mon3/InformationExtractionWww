@@ -29,7 +29,7 @@ def wikicfp_link(number, n2):
     #print("wikicfp_conf lista z pliku", myfile)
     #myfile.close()
 
-#wikicfp_link(3, 3)
+#wikicfp_link(3, 1)
 
 
 
@@ -59,7 +59,7 @@ def conf_link2():
     f.close()
     myfile.close()
 
-#wikicfp_link(2, 2)
+#wikicfp_link(5, 1)
 #conf_link2()
 
 
@@ -157,7 +157,26 @@ def conf_linkN():
 
 #conf_linkN()
 
-
+# wyszukiwanie i pobieranie linkow ze strony http://www.wikicfp.com/cfp/allcfp?page= na podstrony wikicfp do poszczegolnych
+# konferencji i zapisywanie ich do pliku wikicfp_conf.txt
+def wikicfp_link(number, n2):
+    link='http://www.wikicfp.com/cfp/allcfp?page='
+    ind=1
+    f = open('wikicfp_conf.txt', 'w')
+    #while ind <= number:
+    #while number!=0:
+    while number >= n2:
+        html = urllib.request.urlopen(link + str(number))
+        #html = urllib.request.urlopen(link + str(ind))
+        soup = BeautifulSoup(html, 'html.parser').find('div', class_='contsec')
+        count=0
+        for i in soup.find_all('a', href=True):
+            count=count+1
+            if count<=20: # na kazdej stronie jest 20 linkow na konferencje
+                f.write("http://www.wikicfp.com" +i['href'] + '\n')
+                print("http://www.wikicfp.com" +i['href'])
+        number=number-1
+    f.close()
 
 # czyta konkretne wiersze z pliku wikicfp_conf.txt, znajduje tam linki do stron konferencji i zapisuje do pliku conf.txt
 # znajdowanie linku do strony konferencji jest w funkcji conf_link_one(lk)

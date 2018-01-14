@@ -1,32 +1,9 @@
 from asyncio import ensure_future
 from pulsar.api import arbiter, command, spawn, send
 import numpy as np
-import itertools
 import urllib.request
-import requests
 from bs4 import BeautifulSoup, SoupStrainer
 
-
-# wyszukiwanie i pobieranie linkow ze strony http://www.wikicfp.com/cfp/allcfp?page= na podstrony wikicfp do poszczegolnych
-# konferencji i zapisywanie ich do pliku wikicfp_conf.txt
-def wikicfp_link(number, n2):
-    link='http://www.wikicfp.com/cfp/allcfp?page='
-    ind=1
-    f = open('wikicfp_conf.txt', 'w')
-    #while ind <= number:
-    #while number!=0:
-    while number >= n2:
-        html = urllib.request.urlopen(link + str(number))
-        #html = urllib.request.urlopen(link + str(ind))
-        soup = BeautifulSoup(html, 'html.parser').find('div', class_='contsec')
-        count=0
-        for i in soup.find_all('a', href=True):
-            count=count+1
-            if count<=20: # na kazdej stronie jest 20 linkow na konferencje
-                f.write("http://www.wikicfp.com" +i['href'] + '\n')
-                print("http://www.wikicfp.com" +i['href'])
-        number=number-1
-    f.close()
 
 def file_len(fname):    # funkcja obliczania dlugosci pliku
     with open(fname) as f:
@@ -39,7 +16,7 @@ def file_len(fname):    # funkcja obliczania dlugosci pliku
 
 FILE_NAME_HOMEPAGES = "wikicfp_conf.txt"
 
-NAMES = ['reader_1', 'reader_2', 'reader_3']
+NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']
 #NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']
 # nazwy aktorów, czytających linki stron konferencji na wikicfp z pliku wikicfp_conf.txt, na tych stronach wyszukuja
 # linki do stron konferencji i wrzucaja to do pliku conf.txt
@@ -164,10 +141,10 @@ class Reader: # czytanie linkow stron konferencji na wikicfp z pliku wikicfp_con
             name = NAMES.pop()
             # słownik nie może być pusty - inaczej rzuca błędem
             if (len(self.line_dict)!=0):
-                name_indexes = self.line_dict.popitem() #  удаляет и возвращает пару (ключ, значение) ze slownika line_dict
+                name_indexes = self.line_dict.popitem()
                 print("NAME INDEXES: " + str(name_indexes))
 
-                name_index_dict = {name_indexes[0]: name_indexes[1]} #выводит пару ключ : значение ('reader_5', [0, 4])
+                name_index_dict = {name_indexes[0]: name_indexes[1]}
                 print("NAME INDEXES DICT: " + str(name_index_dict))
 
                 # aktor uzywa funkcji write_conf_link do zczytywania z pliku przydzielonych dla niego linkow i zapisywania wynikow do pliku conf.txt:
