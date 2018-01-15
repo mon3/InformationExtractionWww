@@ -88,7 +88,7 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
 
     def __init__(self):
         a = arbiter()
-        file_length = file_len(FILE_NAME_HOMEPAGES) - 1  # czyta ostatnie "/n", więc musimy długość pliku - 1
+        file_length = file_len(FILE_NAME_HOMEPAGES)  # czyta ostatnie "/n", więc musimy długość pliku - 1
         #print("file_length normal = ", file_len(FILE_NAME_HOMEPAGES)) # file_length normal =  27
         print("File length: " + str(file_length))
 
@@ -113,6 +113,9 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
             counter += 1
 
         print(self.line_dict)
+
+        f = open('homepages_test.txt', 'w')
+        f.close()
 
         self._loop = a._loop    # kod z przykladu w dokumentacji
         self._loop.call_later(1, self)
@@ -145,13 +148,18 @@ class Reader: # czytanie linkow stron domowych z pliku homepages.txt, pobieranie
                 # aktor uzywa funkcji readfile do zczytywania z pliku przydzielonych dla niego linkow:
                 # a - aktor, 'readfile' - nazwa wywolywanej funkcji, name_index_dict - parametry przekazywan do funkcji('reader_5', [0, 4])
                 #await send(a, 'readfile', name_index_dict)  # uzycie command:
+                f = open('homepages_test.txt', 'a')
                 result = await send(a, 'readfile', name_index_dict)
                 leng = len(result)
                 print("len(result): ", leng)
+
                 for i in result:
                     print("strona domowa: ", i)
+                    f.write(i + '\n')
                     html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
                     print("zawartosc strony domowej: ", html)
+
+                f.close()
                 # greetme
                 #  - nazwa
                 # komendy, wysyla zlecenie dla aktora a
@@ -214,12 +222,13 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
             leng = len(result)
             print("len(result): ", leng)
             for i in result:
-               print("strona domowa: ", i)
-               html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
-               print("zawartosc strony domowej: ", html)
+                print("strona domowa: ", i)
+                html = urllib.request.urlopen(str(i)).read()  # print zawartosci strony z listy kazdego agenta
+                print("zawartosc strony domowej: ", html)
 
             f = open('homepages_test.txt', 'w')
             for index in result:
+                print("index=", index)
                 f.write(index + '\n')
             f.close()
 
@@ -231,4 +240,4 @@ class Downl:    #  pobieranie linkow stron domowych konferencji z internetu (na 
 
 if __name__ == '__main__':
     Reader()
-    Downl()
+    #Downl()
