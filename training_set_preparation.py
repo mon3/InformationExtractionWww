@@ -185,3 +185,5 @@ def prepare_training_data(docs_path):
     y = [get_labels(doc) for doc in data]
 
     return train_test_split(X, y, test_size=0.2)
+
+

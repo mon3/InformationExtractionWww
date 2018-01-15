@@ -144,7 +144,7 @@ def prepare_crf_trainer(X_train, Y_train):
         'c2': 0.01,
 
         # maximum number of iterations
-        'max_iterations': 100000,
+        'max_iterations': 5000,
 
         # whether to include transitions that
         # are possible, but not observed
