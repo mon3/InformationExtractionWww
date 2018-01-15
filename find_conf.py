@@ -12,22 +12,12 @@ def file_len(fname):    # funkcja obliczania dlugosci pliku
             pass
     return i + 1
 
-#print("Dlugosc pliku conf.txt:", file_len('conf.txt'))
 
 FILE_NAME_HOMEPAGES = "wikicfp_conf.txt"
 
 NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']
-#NAMES = ['reader_1', 'reader_2', 'reader_3', 'reader_4', 'reader_5']
 # nazwy aktorów, czytających linki stron konferencji na wikicfp z pliku wikicfp_conf.txt, na tych stronach wyszukuja
 # linki do stron konferencji i wrzucaja to do pliku conf.txt
-
-
-# komenda do testowania komunikacji pomiędzy aktorami
-@command()
-def greetme(request, message):
-    file_content = 'Hello {}!'.format(message['name'])
-    request.actor.logger.info(file_content)
-    return file_content
 
 
 # czyta jeden przekazany link na konferencje na wikicfp i szuka tam linku do tej konferencji, zwraca ten link
@@ -52,14 +42,14 @@ def find_conf_link_one(url):
 @command()
 def write_conf_link(request, message):
     myfile = open("wikicfp_conf.txt", "r")
-    message_values = list(message.values())  # indeksy pol do zczytywania [[0, 4]]
+    message_values = list(message.values())
     request.actor.logger.info("Indeks 1-go wiersza w funkcji readfile: "+ str(message_values[0][0]+1))
     request.actor.logger.info("Indeks ostatniego wiersza w funkcji readfile: " + str(message_values[0][1]))
     #request.actor.logger.info("Message data: " + str(message_values))
     pocz=message_values[0][0]
     koniec=message_values[0][1]
     lines = myfile.readlines()[pocz:koniec]
-    #print("wiersz linkow: ", lines)
+    # print("wiersz linkow: ", lines)
     #print(lines)
     iter=0
     f = open('conf.txt', 'a')
