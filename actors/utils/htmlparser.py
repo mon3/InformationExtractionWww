@@ -1,10 +1,5 @@
 # coding=utf-8
 from bs4 import BeautifulSoup
-import urllib.request
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.stem.snowball import SnowballStemmer
-from nltk import pos_tag, ne_chunk
 from urllib.request import urlopen
 
 
@@ -170,6 +165,7 @@ def filter_short(token):
 
 
 def tokenize(text):
+    from nltk.tokenize import word_tokenize, sent_tokenize
     """
     Dzieli tekst na tokeny - pojedyncze slowa.
 
@@ -239,6 +235,10 @@ def filter_nonalnum(token):
 
 
 def filter_text(text, stemming=True):
+    from nltk.tokenize import word_tokenize, sent_tokenize
+    from nltk.corpus import stopwords
+    from nltk.stem.snowball import SnowballStemmer
+
     """
     Filtruje tekst - dokonuje tokenizacji oraz opcjonalnie - stemmingu.
 
@@ -261,7 +261,7 @@ def filter_text(text, stemming=True):
     word_tokens = filter(filter_short, word_tokens)
     return word_tokens
 
-
+"""
 if __name__ == '__main__':
     # print
     # html_doc = urllib.request.urlopen('http://www.icitm.org/').read()  # print
@@ -286,3 +286,4 @@ if __name__ == '__main__':
     # soup = BeautifulSoup(response)
     text = get_filtered_text(html, False)
     print(text)
+"""

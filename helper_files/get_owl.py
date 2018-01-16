@@ -5,9 +5,7 @@ class SparqlQueries:
 
     def __init__(self):
         my_world = World()
-        my_world.get_ontology(
-            'file:///home/monikas/Desktop/studia/WEDT/project/conf_ontology'
-            '/onto.owl').load()
+        my_world.get_ontology('file:///Users/paulina/Documents/WEDT/InformationExtractionWww/working_files/onto.owl').load()
         #path to the owl file is given here
         sync_reasoner(my_world)  #reasoner is started and synchronized here
         self.graph = my_world.as_rdflib_graph()

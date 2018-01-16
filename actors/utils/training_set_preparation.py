@@ -1,12 +1,12 @@
+import os
 from bs4 import BeautifulSoup
 from bs4.element import NavigableString
 from bs4.element import Tag
-from nltk import pos_tag
-from sklearn.model_selection import train_test_split
-import os
 from glob import glob
 from random import shuffle
-from htmlparser import get_filtered_text
+from sklearn.model_selection import train_test_split
+
+from actors.utils import htmlparser
 
 
 def get_text_and_tags_recursive(text, textTags, currentSoup, currentTags):
@@ -146,7 +146,7 @@ def tag_annotated(parent_folder):
 def split_text_to_entities(directory, file_nr):
     html = open(os.path.join(os.path.join(directory, "0"), file_nr), 'r').read()
     print(html)
-    get_filtered_text(html, False)
+    htmlparser.get_filtered_text(html, False)
 
 
 def prepare_training_data(docs_path):
@@ -156,6 +156,7 @@ def prepare_training_data(docs_path):
     return train_test_split(X, y, test_size=0.2)
 
 def prepare_training_data_from_html(html_files):
+    from nltk import pos_tag
     docs = []
 
     for i in range(len(html_files)):

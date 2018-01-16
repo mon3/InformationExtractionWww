@@ -1,8 +1,9 @@
 import argparse
 import pycrfsuite
 
-import training_set_preparation
-from htmlparser import get_filtered_text
+from actors.utils import training_set_preparation
+from actors.utils.htmlparser import get_filtered_text
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser()

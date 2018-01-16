@@ -4,7 +4,6 @@ from asyncio import ensure_future
 from bs4 import BeautifulSoup, SoupStrainer
 from pulsar.api import arbiter, command, spawn, send
 from pulsar.api import get_actor
-
 from actors import homepages_from_wikicrp
 
 WIKICFP_FILENAME = 'working_files/wikicfp_conf.txt'
@@ -73,7 +72,7 @@ class MainArbiter:
         for actor in spawned_actors:
             await send(actor, 'stop')
 
-        self._loop.call_later(5, self, a)
+        self._loop.call_later(500, self, a)
 
     def prepare_indexes(self):
         wikicfp_file_length = file_len(WIKICFP_FILENAME)

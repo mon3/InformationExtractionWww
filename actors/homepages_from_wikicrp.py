@@ -43,6 +43,7 @@ Next, it creates new actors who download pages and split them between extractor 
 @command()
 async def parse_homepages_from_wiki_lvl1(request, message):
 
+    print("PARSE_FROM_WIKI", message)
     current_actor = get_actor()
     request.actor.logger.info("Actor: " + str(current_actor) + " Indexes: " +  str(message))
 

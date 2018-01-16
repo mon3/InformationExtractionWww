@@ -1,10 +1,12 @@
-import training_set_preparation
 import argparse
-import pycrfsuite
 import numpy as np
-from sklearn.metrics import classification_report
-import pickle
 import os
+import pickle
+import pycrfsuite
+from sklearn.metrics import classification_report
+
+from actors.utils import training_set_preparation
+
 
 def str2bool(v):
     if v.lower() in ('yes', 'true', 't', 'y', '1'):

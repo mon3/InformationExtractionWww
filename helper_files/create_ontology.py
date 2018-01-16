@@ -1,5 +1,7 @@
 from owlready import *
+
 from http_to_ontology import read_xml_http
+
 
 def run_onto(path):
     # Skrypt powinien być odpalany wtedy, gdy chcemy utworzyć/zmodyfikować
@@ -8,9 +10,10 @@ def run_onto(path):
     # onto = Ontology("http://conferences_wedt.org/onto.owl")
     # onto_path.append(os.path.join(os.getcwd(), 'conf_ontology/'))
     # onto_path.append("/home/monikas/Desktop/studia/WEDT/project/conf_ontology/")
-    onto = get_ontology("file:///home/monikas/Desktop/studia/WEDT/project" \
-                            "/conf_ontology/onto.owl")
+    onto = get_ontology("file:///Users/paulina/Documents/WEDT/InformationExtractionWww/working_files/onto.owl")
     onto.load()
+    ##print(to_owl(onto))
+    #return
 
 
 
