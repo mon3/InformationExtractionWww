@@ -1,13 +1,14 @@
-from asyncio import ensure_future
-from pulsar.api import arbiter, command, spawn, send
-from pulsar.api import get_actor
 import numpy as np
 import urllib.request
+from asyncio import ensure_future
 from bs4 import BeautifulSoup, SoupStrainer
-import homepages_from_wikicrp
+from pulsar.api import arbiter, command, spawn, send
+from pulsar.api import get_actor
 
+from actors import homepages_from_wikicrp
 
-WIKICFP_FILE = "wikicfp1.txt"
+WIKICFP_FILENAME = 'working_files/wikicfp_conf.txt'
+CONFERENCES_HOMEPAGES_FILENAME ='working_files/conferences_homepages.txt'
 FIRST_LEVEL_ACTORS = ['get_homepages_1', 'get_homepages_2', 'get_homepages_3', 'get_homepages_4', 'get_homepages_5']
 
 def original_links():
@@ -32,8 +33,8 @@ def file_len(fname):    # funkcja obliczania dlugosci pliku
 
 class MainArbiter:
     # Arbiter uruchamia agentow pierwszego stopnia: czytanie linkow stron konferencji na wikicfp z pliku
-    # wikicfp_conf.txt, na tych stronach wyszukiwanie linkow do stron konferencji i wrzucanie do pliku conf.txt.
-    # Agenci zlecają zadania dalej następnym agentom.
+    # wikicfp_conf_orig.txt, na tych stronach wyszukiwanie linkow do stron konferencji i wrzucanie do pliku
+    # conferences_homepages.txt. Agenci zlecają zadania dalej następnym agentom.
 
     def __init__(self):
         main_arbiter = arbiter()
@@ -49,7 +50,7 @@ class MainArbiter:
         print(indexes_pair_dict)
 
         #czyszczenie tekstowego pliku
-        f = open('conferences_homepages.txt', 'w')
+        f = open(CONFERENCES_HOMEPAGES_FILENAME, 'w')
         f.close()
 
         spawned_actors = []
@@ -75,7 +76,7 @@ class MainArbiter:
         self._loop.call_later(5, self, a)
 
     def prepare_indexes(self):
-        wikicfp_file_length = file_len(WIKICFP_FILE)
+        wikicfp_file_length = file_len(WIKICFP_FILENAME)
         print("Number of records: " + str(wikicfp_file_length))
 
         actors_number = len(FIRST_LEVEL_ACTORS)

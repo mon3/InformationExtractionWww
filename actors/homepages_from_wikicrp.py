@@ -1,11 +1,14 @@
-from asyncio import ensure_future
-from pulsar.api import arbiter, command, spawn, send
-from pulsar.api import get_actor
 import numpy as np
 import urllib.request
+from asyncio import ensure_future
 from bs4 import BeautifulSoup, SoupStrainer
-import download_homepages
+from pulsar.api import arbiter, command, spawn, send
+from pulsar.api import get_actor
 
+from actors import download_homepages
+
+CONFERENCES_HOMEPAGES_FILENAME ='working_files/conferences_homepages.txt'
+WIKICFP_FILENAME = 'working_files/wikicfp_conf.txt'
 
 
 def split_to_chunks(list, splits_number):
@@ -34,7 +37,7 @@ def find_conf_link_one(url):
                 return i['href']
 
 """
-Actor used for getting homepages links from wikicpf entries stored in wikicfp_conf.txt file.
+Actor used for getting homepages links from wikicpf entries stored in wikicfp_conf_orig.txt file.
 Next, it creates new actors who download pages and split them between extractor actors.
 """
 @command()
@@ -43,7 +46,7 @@ async def parse_homepages_from_wiki_lvl1(request, message):
     current_actor = get_actor()
     request.actor.logger.info("Actor: " + str(current_actor) + " Indexes: " +  str(message))
 
-    wikicfp_file = open("wikicfp_conf.txt", "r")
+    wikicfp_file = open(WIKICFP_FILENAME, "r")
     wikicfp_file_lines = wikicfp_file.readlines()[message[0]: message[1]]
     wikicfp_file.close()
 
@@ -57,7 +60,7 @@ async def parse_homepages_from_wiki_lvl1(request, message):
             continue
         conference_links.append(conference_link)
 
-    f = open('conferences_homepages.txt', 'a')
+    f = open(CONFERENCES_HOMEPAGES_FILENAME, 'a')
     for link in conference_links:
         f.write(link + '\n')
     f.close()

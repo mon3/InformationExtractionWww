@@ -21,5 +21,3 @@ async def download_homepages(request, message):
             print("Http: ", http)
 
     return get_actor().name
-# czyta konkretne wiersze z pliku wikicfp_conf.txt, znajduje tam linki do stron konferencji i zapisuje do pliku conf.txt
-# znajdowanie linku do strony konferencji jest w funkcji conf_link_one(lk)
