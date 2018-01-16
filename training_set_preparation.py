@@ -152,6 +152,10 @@ def split_text_to_entities(directory, file_nr):
 def prepare_training_data(docs_path):
     print("Starting preparation")
     html_files = get_files(docs_path)
+    X, y = prepare_training_data_from_html(html_files)
+    return train_test_split(X, y, test_size=0.2)
+
+def prepare_training_data_from_html(html_files):
     docs = []
 
     for i in range(len(html_files)):
@@ -183,7 +187,6 @@ def prepare_training_data(docs_path):
 
     X = [extract_features(doc) for doc in data]
     y = [get_labels(doc) for doc in data]
-
-    return train_test_split(X, y, test_size=0.2)
+    return X, y
 
 
