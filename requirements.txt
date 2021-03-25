@@ -11,7 +11,7 @@ psutil==5.4.2
 pulsar==2.0.1
 pulsar-app==0.8.0
 pulsar-client==1.20.0
-PyYAML==3.12
+PyYAML==5.4
 requests==2.18.4
 scikit-learn==0.19.1
 six==1.11.0
