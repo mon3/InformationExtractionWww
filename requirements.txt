@@ -16,6 +16,6 @@ requests==2.18.4
 scikit-learn==0.19.1
 six==1.11.0
 spawn==0.1
-urllib3==1.22
+urllib3==1.26.5
 uvloop==0.9.1
 WebOb==1.7.4
