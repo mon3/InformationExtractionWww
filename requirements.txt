@@ -6,7 +6,7 @@ galaxy-lib==17.9.10
 httptools==0.0.9
 idna==2.6
 multidict==3.3.2
-numpy==1.13.3
+numpy==1.22.0
 psutil==5.4.2
 pulsar==2.0.1
 pulsar-app==0.8.0
